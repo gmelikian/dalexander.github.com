@@ -1,0 +1,299 @@
+BIB2XHTML(L)							  BIB2XHTML(L)
+
+
+
+1mNAME0m
+       bib2xhtml - BibTeX bibliography to XHTML converter
+
+1mSYNOPSIS0m
+       1mbib2xhtml  22m[  1m-a	22m]  [	 1m-b 4m22mbibtex-options24m ] [ 1m-c 22m] [ 1m-D 4m22mmappings24m ] [ 1m-d0m
+       4mdelimiter24m ] [ 1m-e 4m22mextended-information24m ] [ 1m-h 4m22mheading24m ] [ 1m-i 22m] [ 1m-k 22m]	[
+       1m-m  4m22mmacro-file24m ] [ 1m-n 4m22mauthor-name24m ] [ 1m-r 22m] [ 1m-s 4m22mstyle24m ] [ 1m-t 22m] [ 1m-v 22m] [
+       1m-u 22m] 4msourcefile24m [ 4mhtmlfile24m ]
+
+1mDESCRIPTION0m
+       1mbib2xhtml 22mconverts a bibtex-format bibliography file to XHTML.  4msource-0m
+       4mfile24m may be either a BibTeX-format bibliography (1m.bib22m) file or a LaTeX-
+       fomatted bibliography auxillary file (1m.aux22m).  4mhtmlfile24m	 will  often  be
+       just  part  of  a  larger  XHTML file; 1mbib2xhtml 22mattempts to update the
+       XHTML file in place.  It does this by searching 4mhtmlfile24m for  two  spe-
+       cial  strings,  which delimit the bibliography part of the file.	 These
+       strings are the XHTML comments
+
+	      <!-- BEGIN BIBLIOGRAPHY 4mdelimiter24m -->
+
+	      <!-- END BIBLIOGRAPHY 4mdelimiter24m -->
+
+       If these delimiters are found, the old  bibliography  between  them  is
+       replaced	 with  the  new bibliography.  Otherwise the new bibliography,
+       with the appropriate delimiters, is appended to the  end	 of  4mhtmlfile24m,
+       and  it	will  be  necessary to move it to the proper location by hand.
+       Note that it is possible for 4mhtmlfile24m to contain any number	 of  bibli-
+       ographies,  and	they  may be updated independently.  If no 4mhtmlfile24m is
+       specified, the bibliography is written to standard output.
+
+       The tag of each BibTeX bibliography entry  is  converted	 into  a  name
+       anchor  (<A  NAME="tag">)  in  4mhtmlfile24m, and may be used to construct a
+       link to this particular entry.
+
+       By default the contents of the bibliography are determined by the  con-
+       tents  of  the 4msourcefile24m.	It is also possible to specify the contents
+       of the bibliography in the 4mhtmlfile24m itself by setting the 1m-i 22moption and
+       using  two special strings to delimit the citations to be used for gen-
+       erating the bibliography.  These strings are the XHTML comments
+
+	      <!-- BEGIN CITATIONS 4mdelimiter24m -->
+
+	      <!-- END CITATIONS 4mdelimiter24m -->
+
+       If these delimiters are found, the contents between them	 are  searched
+       for  XHTML  comments  containing the citations (one citation per line),
+       for example
+
+	      <!-- BEGIN CITATIONS 4mdelimiter24m -->
+
+	      <!-- \citation{knuth:1997}
+		  \citation{knuth:1984} -->
+
+	      <!-- END CITATIONS 4mdelimiter24m -->
+
+       These citations are then used for  choosing  the	 bibliography  entries
+       from the 4msourcefile24m.
+
+   1mSpecial Field Processing0m
+       Several	BibTeX	fields are treated specially.  The filenames specified
+       in the 1mpostscript22m, 1mpdf22m, and 1mdvi 22mfields are  relative  to	the  4mhtmlfile0m
+       directory.   In	addition,  1mbib2xhtml	22mrecognizes compressed or gzipped
+       files (those with filenames ending in 1m.Z22m, 1m.gz22m, or 1m.z22m).
+
+       1murl	22mIf the 1murl 22mfield exists, a link (``A''	tag)  is  created.   The
+	      destination  of the link is the 1murl 22mtag's value.  The bibliogra-
+	      phy entry's title is the source of the link.  This can  be  used
+	      to  create  a link to a XHTML version of the paper, or to a ver-
+	      sion that is available by ftp.
+
+       1mmailto 22mIf the 1mmailto 22mfield exists, a link (``A'' tag) is created.   The
+	      destination of the link is the 1mmailto 22mtag's value.  The bibliog-
+	      raphy entry's author name is the source of the link.
+
+       1mpostscript0m
+	      If the 1mpostscript 22mfield exists, its value is used as the name of
+	      a	 PostScript  file.   1mbib2xhtml 22mcreates a link to the file, and
+	      updates 4mhtmlfile24m with the number of pages and size of the  Post-
+	      Script file.
+
+       1mdoi	22mIf the 1mdoi 22mfield exists, its value is used as the designation of
+	      a digital object identifier.  1mbib2xhtml 22mcreates a  link  to	the
+	      object  through  4mhttp://dx.doi.org24m and updates 4mhtmlfile24m with the
+	      1mdoi 22mas a hyperlink.	The 1mdoi 22mshould normally be in  a  canonical
+	      form like the following: 4mdoi:10.1145/363347.363387.24m	However, if
+	      the 1mdoi 22mdesignator is formed as an HTTP hyperlink,  it  will	 be
+	      converted	 to  the canonical form by replacing the HTTP protocol
+	      designation and the host name of the  hyperlink  with  the  4mdoi:0m
+	      literal string.
+
+       1mpdf	22mIf  the 1mpdf 22mfield exists, its value is used as the name of a PDF
+	      (portable document format) file.	1mbib2xhtml 22mcreates	a  link	 to
+	      the file and updates 4mhtmlfile24m with the size of the PDF file.
+
+       1mdvi	22mIf  the 1mdvi 22mfield exists, its value is used as the name of a TeX
+	      DVI file.	 1mbib2xhtml 22mcreates a link	to  the	 file  and  updates
+	      4mhtmlfile24m with the number of pages and size of the DVI file.
+
+       1mauthor22m, 1mkeywords0m
+	      The  full	 1mauthor  22mand  1mkeywords 22mfields of each BibTeX entry are
+	      included in 4mhtmlfile24m as XHTML comments, and may be used  by	CGI
+	      scripts  (such  as  1mbibsearch22m, which is supplied) to select only
+	      certain entries.
+
+   1mHints0m
+       1mbib2xhtml22m's LaTeX to XHTML conversion is not very smart.  If  something
+       isn't being converted correctly, try doing it in a different way.
+
+       1mbib2xhtml  22mdoes  not currently understand 4m\verb24m.  To get a tilde into a
+       filename or an embedded URL, use 4m\~{}24m.  On the other hand, entries con-
+       taining	4mURL24m  fields  or  4m\url{}24m commands, are correctly converted into
+       hyperlinks.  Leave such hyperlinks as they are; do not embed any	 LaTeX
+       commands in them.
+
+       The  lists  that	 1mbib2xhtml  22mgenerates  contain  CSS hooks of the class
+       4mbib2xhtml24m.	You can therefore modify the appearance	 of  the  lists	 by
+       adding style entries like the following in the web page's header.
+	      <style type="text/css">
+		   dl.bib2xhtml dd { padding-bottom: 1em }
+	      </style>
+
+	      <style type="text/css">
+		   ul.bib2xhtml li { padding-bottom: 1em }
+	      </style>
+
+       The  value  of  the  named attributes can contain arbitrary HTML markup
+       commands, and can thus be used for substituting the  text  with	icons.
+       For example, the following Unix command can be used for creating stand-
+       alone PDF icons.
+	   perl bib2xhtml -e 'nosize,nopages,PDF:<img src="pdficon_small.gif"
+	     alt="PDF" border="0" />' example.bib example.html
+       Unser the Windows shell the corresponding command would be.
+	   perl bib2xhtml -e "nosize,nopages,PDF:<img src='pdficon_small.gif'
+	     alt='PDF' border='0' />" example.bib example.html
+       A couple of PDF icons and the conditions for their use are available at
+       4mhttp://www.adobe.com/misc/linking.html#pdficon24m 4m.0m
+
+       To  display  the	 number	 of  pages in local PDF files, the Perl module
+       4mPDF::API224m must be installed on the system where 1mbib2xhtml	 22mis	running.
+       A command like the following will accomplish this.
+	   perl -MCPAN -e "install PDF::API2"
+
+
+1mOPTIONS0m
+       1m-a	22mInclude the BibTeX file's abstract field in the bibliography.
+
+       1m-b 4m22mbibtex-options0m
+	      Provide the specified options to the BibTeX program.
+
+       1m-c	22mSort	 chronologically.   Normally,  the  bibliography is ordered
+	      first by author and then by date.	 With this option, the	bibli-
+	      ography is ordered by year, month, day, and then by author.
+
+       1m-d 4m22mdelimiter0m
+	      Specify  the  delimiter  that sets the bibliography off from the
+	      rest of the XHTML file.  The default delimiter is	 the  name  of
+	      the bibliography file with the 1m.bib 22mextension stripped.
+
+       1m-D 4m22mmappings0m
+	      Define  URL  to  directory mappings.  The 4mmappings24m argument con-
+	      tains a sequence of comma-separated values.  Each value contains
+	      a	 local	file path and the corresponding URL, separated by an 4m@0m
+	      sign.  The resulting URL is used for linking the	various	 paper
+	      file format types.
+
+       1m-e 4m22mextended-information0m
+	      Specify  how  an entry's extended information will be displayed.
+	      The extended information is specified as a series of comma-sepa-
+	      rated attributes.	 The following plain attributes are supported.
+
+	      1mnotype 22mDo not display the file's type (PDF, Postscript, DVI).
+
+	      1mnosize 22mDo not display the file's size in bytes.
+
+	      1mnopages0m
+		     Do not display the file's number of pages.
+
+	      1mnocompression0m
+		     Do not display the file's compression type.
+
+	      1mnodoi  22mDo not display the file's DOI.
+
+	      1mnobrackets0m
+		     Do not enclose the DOI link or the file's extended infor-
+		     mation in brackets.
+
+       A number of valued attributes allow the specification of	 the  text  to
+       display	for  various  file  types.   These are written as a 4mname24m:4mvalue0m
+       pair.  The following names are supported for valued attributes.
+
+	      o	     PostScript
+
+	      o	     PDF
+
+	      o	     DVI
+
+	      o	     DOI
+       1m-h 4m22mheading24m Use the string 4mheading24m instead of  the	 default  title	 when
+       creating a new 4mhtmlfile24m.  If updating an existing 4mhtmlfile24m, this option
+       is ignored.
+
+       1m-i	22mThe citations are included in the 4mhtmlfile24m.  When this option is
+	      set, the 4msourcefile24m must be a .bib file.
+
+       1m-k	22mIn  labeled	styles	(1malpha22m, 1mnamed22m, 1mplain22m, and 1munsort22m) append to
+	      the label of each entry its BibTeX key.  Thus, the label of each
+	      entry  will  consist  of	the original label, followed by an em-
+	      dash, followed by the BibTeX key.
+
+       1m-m 4m22mmacro24m 4mfile0m
+	      Specify a BibTeX macro file to supply to BibTeX when  processing
+	      the  bibliography	 file.	 Macro	files  typically contain local
+	      abbreviations and other macro definitions.
+
+       1m-n 4m22mauthor24m 4mname0m
+	      Specify an author name to	 highlight.   Any  bibliography	 entry
+	      author  names that match the name specified as a regular expres-
+	      sion will be set in HTML 4mstrong24m tags and will therefore be  dis-
+	      played in a bold (or similar) font.
+
+       1m-r	22mReverse the chronological sorting order.  Normally, the bibliog-
+	      raphy is sorted (by year; BibTeX ignores	the  month)  from  the
+	      earliest entry to the latest entry.  With this option, the order
+	      is reversed.  Note that to  obtain  a  bibliography  ordered  by
+	      chronological order you must also specify the 1m-c 22moption.
+
+       1m-s 4m22mstyle0m
+	      Create  a	 4mstyle24m-style bibliography.	 Supported styles are 1mempty0m
+	      (the default),  1mplain22m,  1malpha22m,	1mnamed22m,  1mparagraph22m,  1munsort22m,  and
+	      1munsortlist22m.	 An 1mempty 22mbibliography is a bulleted list.	 A 1mplain0m
+	      bibliography is a numbered list.	1mparagraph 22mproduces just  para-
+	      graphs  (no  bullets).   1munsort	 22mis	like  1mplain 22mexcept that the
+	      entries in the XHTML file are in the same order as as  they  are
+	      in  the source file.  1munsortlist 22mis like 1munsort 22mbut entry labels
+	      are bullets instead  of  numbers.	  An  1malpha  22mbibliography	has
+	      labels that are in the BibTeX alpha style.  A 1mnamed 22mbibliography
+	      has labels of the form [name, year].
+
+       1m-t	22mWrite a timestamp with the date at which  the  bibliography	was
+	      updated to 4mhtmlfile24m.
+
+       1m-v	22mReport version number on stderr.
+
+       1m-u	22mConvert  LaTeX special characters into the corresponding Unicode
+	      characters, and output XML coded in UTF-8.  The output  produced
+	      by this option may be easier to parse and validate with some XML
+	      parsers.	By default LaTeX special characters are converted into
+	      HTML character entities.
+
+1mFILES0m
+       1mhtml-a.bst    22malpha XHTML BibTeX style file
+       1mhtml-n.bst    22mnamed XHTML BibTeX style file
+       1mhtml-u.bst    22munsort XHTML BibTeX style file
+       1mhtml-aa.bst22m, 1mhtml-na.bst22m, 1mhtml-ua.bst0m
+		     versions of the above style files with abstracts
+       1mbibsearch     22ma CGI script for performing bibliography searches
+
+1mSEE ALSO0m
+       1mperl22m(L), 1mbibtex22m(L).
+
+1mBUGS0m
+       The LaTeX to XHTML translation, while decent, is not perfect.
+
+       Requires	 bibtex and perl.  However, I think that most sites that would
+       want to convert	BibTeX	to  XHTML  will	 already  have	both  programs
+       installed.
+
+       Relies on dviselect to count the number of pages in a DVI file.
+
+1mAUTHORS0m
+       David Hull while at the University of Illinois at Urbana-Champaign.
+
+       Diomidis	 Spinellis  (4mdds@aueb.gr24m),	 Athens University of Economics and
+       Business.
+
+
+1mHISTORY0m
+       The program was originally written as 1mbib2html 22mby David Hull  in  1996,
+       who  maintained it until 1998 (version 1.33).  In 2002, due to the lack
+       of visible updates on the web, the program was adopted for maintenance,
+       distribution,  and  further  evolution  by Diomidis Spinellis.  Changes
+       made by him include support for XHTML 1.0 and documentation bug	fixes.
+       The first public release of the maintenance effort was in 2004 (version
+       2.1).  On March 2004 the program was renamed into  1mbib2xhtml  22mto  avoid
+       confusion  with	projects  using	 the  name  1mbib2html .  22mPanos Louridas
+       (4mlouridas@aueb.gr24m) added the functionality for including the  citations
+       in the 4mhtmlfile24m 4m.0m
+
+       See  4mhttp://www.spinellis.gr/sw/textproc/bib2xhtml24m	for the latest ver-
+       sion.  This is free software, and  may  be  modified  or	 redistributed
+       under the terms of the GNU Public License.
+
+
+
+				5 December 2010			  BIB2XHTML(L)

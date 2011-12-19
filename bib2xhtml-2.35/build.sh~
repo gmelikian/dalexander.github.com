@@ -1,0 +1,1 @@
+./bib2xhtml -c -s empty -n "Alexander" cv.bib  > cv.html
