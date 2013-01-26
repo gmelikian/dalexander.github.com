@@ -1,0 +1,33 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /Users/dalexander/Dropbox/PacBio/Presentations/UCLA-2012/slides.org
+*                                                                    :B_note:
+    :PROPERTIES:
+    :BEAMER_env: note
+    :ARCHIVE_TIME: 2012-11-29 Thu 08:29
+    :ARCHIVE_FILE: ~/Dropbox/PacBio/Presentations/UCLA-2012/slides.org
+    :ARCHIVE_OLPATH: High accuracy consensus: the Quiver algorithm/Quiver accuracy
+    :ARCHIVE_CATEGORY: slides
+    :END:
+   We are also starting to find errors in Sanger-based references!
+
+
+# ** Quiver case study: Genomic regions associated with mental retardation
+# *** (ignored)  :B_ignoreheading:BMCOL:
+#     :PROPERTIES:
+#     :BEAMER_env: ignoreheading
+#     :BEAMER_col: 0.5
+#     :END:
+#    - Collaboration with Evan Eichler (HHMI, University of Washington)
+#    - BACs from VMRC53 library CH15 clones, thought to be close to HG19
+#      reference genome
+#    - $\sim ~30$ discordant bases between PacBio data and HG19 (Sanger) data
+#    - PacBio calls 100\% confirmed by PCR-Sanger
+
+# *** (ignored) :B_ignoreheading:BMCOL:
+#     :PROPERTIES:
+#     :BEAMER_env: ignoreheading
+#     :BEAMER_col: 0.5
+#     :END:
+#     \includegraphics[width=\textwidth]{img/eichler-variants.png}

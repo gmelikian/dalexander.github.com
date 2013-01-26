@@ -1,0 +1,21 @@
+\begin{thebibliography}{1}
+
+\bibitem{price2010new}
+A.L. Price, N.A. Zaitlen, D.~Reich, and N.~Patterson.
+\newblock {New approaches to population stratification in genome-wide
+  association studies}.
+\newblock {\em Nature Reviews Genetics}, 11(7):459--463, 2010.
+
+\bibitem{price2006principal}
+A.L. Price, N.J. Patterson, R.M. Plenge, M.E. Weinblatt, N.A. Shadick, and
+  D.~Reich.
+\newblock {Principal components analysis corrects for stratification in
+  genome-wide association studies}.
+\newblock {\em Nature genetics}, 38(8):904--909, 2006.
+
+\bibitem{alexander2009fast}
+D.H. Alexander, J.~Novembre, and K.~Lange.
+\newblock {Fast model-based estimation of ancestry in unrelated individuals}.
+\newblock {\em Genome research}, 19(9):1655, 2009.
+
+\end{thebibliography}

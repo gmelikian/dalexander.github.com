@@ -1,0 +1,466 @@
+#+TITLE: Highly Accurate Consensus Sequence and Genome Assembly using PacBio\R  /RS/ Sequence Data
+#+AUTHOR: David H. Alexander, Ph.D. \newline  Pacific Biosciences
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:
+#+LINK_HOME:
+#+XSLT:
+#+LaTeX_HEADER: \usepackage{fourier}
+#+LaTeX_HEADER: \usepackage{amsmath}
+#+LaTeX_HEADER: \newcommand{\R}{\textsuperscript{\textregistered}}
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [serif,11pt]
+#+STARTUP: beamer
+#+BEAMER_FRAME_LEVEL: 2
+#+COLUMNS: %40ITEM %10BEAMER_env(Env) %9BEAMER_envargs(Env Args) %4BEAMER_col(Col) %10BEAMER_extra(Extra)
+
+* Outline
+
+** Outline
+   - History of DNA sequencing
+   - PacBio SMRT\R sequencing in a nutshell
+   - A genome assembly primer
+   - HGAP assembly procedure
+   - High accuracy consensus: the Quiver algorithm
+
+* History of DNA sequencing
+
+**
+   \sectionpage
+
+** Generation 1: Sanger sequencing
+   \includegraphics[width=4.5in]{img/capillary-sanger.pdf}
+
+   - Dideoxy chain termination
+   - Longish reads ($\sim700$ bp). High accuracy. Low throughput
+
+** Generation 2: High-throughput short-read technologies
+   - Short-reads ($\sim 100$ bp), paired-end
+     - Read length limited by phase coherence of amplicon colonies
+   - Mate-pair libraries give potential for long-range information
+   - *Very* high throughput
+
+** Generation 2 example: Illumina
+   \begin{columns}[c]
+   \column{2.2in} \hspace{0.1in} \includegraphics[width=2in]{img/illumina-amplification.png}
+   \column{2.5in} \includegraphics[width=1.8in]{img/illumina-reaction.png}
+   \end{columns}
+
+   - Bridge PCR method for clonal amplification
+   - Cyclic, reversible-terminator based chemistry
+
+** Generation 3: High-throughput long-read technologies
+   \includegraphics[width=3in]{img/RS.pdf}
+   \includegraphics[width=2in]{img/smrtcell.jpeg}
+
+   PacBio SMRT\R sequencing
+   - Very long reads (C2 chemistry mean > 3000bp; XL: > 5000bp)
+   - High throughput
+
+
+* PacBio SMRT\R Sequencing
+
+**
+  \sectionpage
+
+** SMRT\R = "single molecule, real time"
+   \includegraphics[width=4.5in]{img/smrt-cartoon.pdf}
+#+begin_latex
+   \newline {\tiny [Eid, 2009]}
+#+end_latex
+   - Polymerases immobilized in Zero-Mode Waveguides
+   - DNA sequencing reaction watched in real time using
+     fluorescent-labeled nucleotides
+
+** Long, and very long, reads: history
+   \includegraphics[width=4.2in]{img/readlength-timeline.png}
+
+** Long, and very long, reads: C2
+   \includegraphics[width=3.8in]{img/c2-readlengths.pdf}
+
+** From photon counts to base calls: *primary* analysis
+   \includegraphics[width=4.5in]{img/primary-reduction.pdf}
+#+begin_latex
+   \newline {\tiny [Credit: Jim Labrenz]}
+#+end_latex
+
+** From bases to actionable information: *secondary* analysis
+   \vspace*{\bigskip}
+   \hspace*{2em}
+   \includegraphics[width=3.6in]{img/smrtview.png}
+
+*** cols                                                          :B_columns:
+    :PROPERTIES:
+    :BEAMER_env: columns
+    :END:
+**** left                                                             :BMCOL:B_ignoreheading:
+     :PROPERTIES:
+     :BEAMER_env: ignoreheading
+     :BEAMER_col: 0.5
+     :END:
+   - Variant calling
+   - Phasing
+   - /De novo/ genome assembly
+**** right                                                            :BMCOL:B_ignoreheading:
+     :PROPERTIES:
+     :BEAMER_env: ignoreheading
+     :BEAMER_col: 0.5
+     :END:
+   - Methylation / base modification detection
+   - Transcript analysis
+
+
+** PacBio data: error model
+   \begin{figure}
+   \centering
+     \includegraphics[width=4.5in]{img/trace.png}
+   \end{figure}
+
+   - Errors dominated by indels
+     - Cognate extras (homopolymer expansion)
+     - Pulse merging (homopolymer contraction)
+     - Noncognate extras
+     - /Essentially no substitutions/
+
+** PacBio data: data format
+   ~bas.h5~ file contains a lot more than just basecalls.  Basecaller
+   provides metrics indicating areas of uncertainty.  "Breadcrumbs"
+
+   | Base | Insertion | Substitution | Deletion | Deletion | Merge |
+   |      |        QV |           QV |       QV | Tag      |    QV |
+   |------+-----------+--------------+----------+----------+-------|
+   | A    |         8 |           12 |       16 | N        |    14 |
+   | T    |         2 |           12 |        5 | T        |   100 |
+   | T    |        11 |           30 |        4 | G        |    25 |
+   | G    |        12 |           30 |       11 | A        |    11 |
+   | G    |         3 |           30 |       16 | N        |    27 |
+   | C    |         6 |           30 |       16 | N        |    19 |
+   | C    |         3 |           19 |        3 | C        |    21 |
+   | G    |         2 |           21 |        4 | G        |    22 |
+
+   $$QV = -10 \log_{10} p_{error}$$
+
+* A genome assembly primer
+
+**
+   \sectionpage
+
+** Shotgun sequencing and assembly
+   \includegraphics[width=4.5in]{img/shotgun.pdf}
+#+begin_latex
+\newline \tiny [Credit: David Tse]
+#+end_latex
+
+** Shotgun sequencing and assembly
+   \includegraphics[width=4in]{img/overlap-graphs.pdf}
+#+begin_latex
+\newline \tiny [Credit: Mike Schatz]
+#+end_latex
+
+** Lander-Waterman model (1988)
+   Idealization of genome assembly.  Letting $L$ denote readlength,
+   $G$ genome size, and $C$ coverage, main results:
+
+*** Expected number of contigs (ideal)                              :B_block:
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+    $$\mathrm{E}[\mathrm{NumContigs}]  = L^{-1}GC e^{-C}$$
+
+*** Expected contig length (ideal)                                  :B_block:
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+    $$\mathrm{E}[\mathrm{ContigLength}] = LC^{-1}(e^{C} - 1)$$
+
+    Predicts that long reads are better, but sufficient short read
+    coverage would be just as good.  *However...*
+
+** Long repeats are everywhere
+
+*** FOO                                                           :B_columns:
+    :PROPERTIES:
+    :BEAMER_env: columns
+    :END:
+**** Human mobile elements                                    :BMCOL:B_block:
+     :PROPERTIES:
+     :BEAMER_col: 0.5
+     :BEAMER_env: block
+     :END:
+    \vspace{0.2in}
+    \includegraphics[width=2.3in]{img/witherspoon-mobile-elements.pdf}
+    \newline
+    \tiny [Credit: David Witherspoon]
+
+**** /E Coli/ long repeats                                    :BMCOL:B_block:
+     :PROPERTIES:
+     :BEAMER_col: 0.5
+     :BEAMER_env: block
+     :END:
+     \includegraphics[width=2in]{img/ecoli-repeats.pdf}
+
+*** text (ignored)                                          :B_ignoreheading:
+    :PROPERTIES:
+    :BEAMER_env: ignoreheading
+    :END:
+    Long repeats stymie short read assembly:
+     - False edges introduced into overlap graph
+     - /Misassembly/
+     - Workarounds---mate-pair, clone libraries---require more laborious sample prep
+
+
+* HGAP assembly procedure
+
+**
+   \sectionpage
+
+
+** Hierarchical genome assembly procedure (HGAP)
+   \hspace*{-0.2in}
+   \includegraphics[width=4.75in]{img/hgap.pdf}
+   \hspace*{0.4in}
+#+begin_latex
+\newline \tiny [Credit: Jason Chin]
+#+end_latex
+
+
+** HGAP application: /Meiothermus ruber/ (JGI/DOE)
+   \hspace*{-0.2in}
+   \includegraphics[width=4.75in]{img/hgap-mruber1.pdf}
+   \hspace*{0.4in}
+#+begin_latex
+\newline \tiny [Slide: Jonas Korlach]
+#+end_latex
+
+** HGAP application: /Meiothermus ruber/ (JGI/DOE)
+   \hspace*{-0.2in}
+   \includegraphics[width=4.75in]{img/hgap-mruber2.pdf}
+   \hspace*{0.4in}
+#+begin_latex
+\newline \tiny [Slide: Jonas Korlach]
+#+end_latex
+
+** HGAP application: /Meiothermus ruber/ (JGI/DOE)
+   \hspace*{-0.2in}
+   \includegraphics[width=4.75in]{img/hgap-mruber3.pdf}
+#+begin_latex
+\newline \tiny [Slide: Jonas Korlach]
+#+end_latex
+
+
+# - Use longest reads (> 10 kb, for example) as seeds
+# - Align shorter reads to seeds, build high accuracy consensus
+# - Use off-the-shelf Celera Assembler to assemble
+#   \hspace{4em} \newline $\to$ high contiguity
+# - Polish assembly using Quiver
+#   \hspace{4em} \newline $\to$  high contiguity, high accuracy (Q50)
+
+
+* High accuracy consensus: the Quiver algorithm
+
+**
+  \sectionpage
+
+** The consensus problem
+  - /Given/: A sequence of reads $\mathbf{R} = \{R_1, R_2, \ldots
+    R_{K}\}$ (encompassing basecalls /and/ pulse metric features)
+  - /Desired/: A consensus sequence $\widehat{T}$ that is, in some sense,
+    a "best" estimate of the underlying true template sequence $T$ that
+    was present in the ZMW.
+
+*** Applications:                                                   :B_block:
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+    Variant calling, finishing assemblies, circular
+    consensus sequencing...
+
+** Example
+
+   | Template | ~GATTACA~  |
+   |----------+------------|
+   | Read 1   | ~GATTCA~   |
+   | Read 2   | ~GATTTACA~ |
+   | Read 3   | ~GATACA~   |
+
+
+** Multiple-alignment consensus approach
+   Do an MSA and let each column vote.
+
+   | Read 1    | \verb$GA-TT-CA$ |
+   | Read 2    | \verb$GATTTACA$ |
+   | Read 3    | \verb$GA--TACA$ |
+   |-----------+-----------------|
+   | Plurality | \verb$GA-TTACA$ |
+
+   Problems:
+   - No notion of template vs observations--no clean way to represent our error model.
+   - No way to take advantage of QV information
+
+** Quiver: a model-based approach
+   - Encode our sequencing error model as $\Pr(\mathbf{R} \mid T)$
+   - Quiver uses a greedy algorithm to maximize the likelihood
+     $\Pr(\mathbf{R} \mid T)$ in the unknown template $T$.
+
+** Quiver algorithm overview
+   $\mathsf{QuiverConsensus}$ for reference window $W$: (/Rough sketch/)
+   - Use reference alignment to identify reads $\mathbf{R}=\{R_1, R_2, \ldots R_K\}$
+     corresponding to $W$
+   - /Throw away reference---not used in computing consensus/
+   - $\widehat{T} \leftarrow \mathsf{PoaConsensus}(\mathbf{R})$
+   - Repeat until convergence:
+     $$\widehat{T} \leftarrow \hat{T} +
+     \big\{\text{single base mutations } \mu \, \mid
+     \Pr(\mathbf{R} \mid \widehat{T} + \mu) > \Pr(\mathbf{R} \mid \widehat{T}) \big\}$$
+
+** How to compute $\Pr(\mathbf{R} \mid T)$?
+
+   1. Reads are assumed independent, so
+      $$\Pr(\mathbf{R} \mid T) = \prod_{k=1}^{K}\Pr(R_k \mid T)$$
+
+   2. For PacBio, indels are the rule, so consider the
+      possible \emph{alignments}---the ways $T$ can be construed to
+      have generated $R_k$:
+
+      $$\Pr(R_k \mid T) = \sum_\mathcal{A} \Pr(R_k, \mathcal{A} \mid T) $$
+
+      /Computed efficiently using a standard Sum-Product dynamic programming approach./
+
+** Sketch of dynamic programming
+ - Sum-Product definition:
+     \begin{align*}
+     A_{ij} \doteq&
+     \text{ marginal prob. of an alignment of $R$[0:i+1] to $T$[0:j+1]} \\
+     B_{ij} \doteq&
+     \text{ marginal prob. of an alignment of $R$[i:I] to $T$[j:J]}
+     \end{align*}
+
+ - Sum-Product recursion:
+   \begin{align*}
+   A_{ij} &= \sum_{m: (i',j') \to (i, j)}   (A_{i'j'} \times \mathrm{moveScore}(m)) \\
+   B_{ij} &= \sum_{m: (i, j)  \to (i', j')} (\mathrm{moveScore}(m) \times B_{i'j'})
+   \end{align*}
+
+ - For Viterbi approximation, replace /marginal/ by /maximum/, replace /sum/
+   by /max/.
+
+** Alignment moves
+   \begin{figure}
+   \centering
+   \includegraphics[width=2.5in]{img/moves}
+   \end{figure}
+
+   - Additional "merge" move helps better account for pulse merging
+
+** Alignment move scores
+   $moveScore$ is transition probability, determined by the observed
+   pulse metrics.  Example:
+
+   $$\mathrm{moveScore}(\mathsf{Insertion: (i, j) \to (i+1, j)}) = 10^{-0.1 \cdot\mathsf{InsertionQV[i]}}$$
+
+
+   where
+   \begin{align*}
+   \hat{p}_{insertion}[i]     &= \mathrm{UnPhred}(\mathsf{InsertionQV}[i]) \\
+   \hat{p}_{deletion}[i]      &= \hat{p}_{merge} + \hat_{p}_{missed}
+   \hat{p}_{incorporation}[i] &= p_ \\
+   \mathrm{UnPhred}(q) & = 10^{-q/10}  \\
+   \end{align*}
+
+   Our dynamic programming model can be formalized as /pair HMM/
+   (actually a /pair CRF/).
+
+** Efficiently computing $\Pr(R_k \mid T + \mu)$
+   - Need to compute score of mutation $\mu$ quickly as this is the
+     /rate-limiting operation/ in computing the consensus.
+   - Do not refill entire $A$, $B$ matrices--we just recalculate two
+     columns of $A$ and join with one column of $B$.
+   - Exploit forward-backward identity
+     \begin{align*}
+     \Pr(R_k \mid T)   =& A_{IJ} = B_{00} \\
+                       =& \sum_{m: (i',j') \to (i, j)} A_{i'j'} \times B_{ij},
+                       \text{ for \bf{any} $j$}
+     \end{align*}
+
+** Banding for memory and CPU efficiency
+   \begin{figure}
+   \centering
+   \includegraphics[width=3in]{img/sparsity}
+   \end{figure}
+
+   - Optimization 1: /banded dynamic programming/: only compute a narrow band of
+     high-scoring rows within each column.
+   - Optimization 2: Only /store/ the bands.
+     |                                 | Naive    | Banded   |
+     |---------------------------------+----------+----------|
+     | Initial computation of $A$, $B$ | $O(L^3)$ | $O(L^2)$ |
+     | Computation of mutation score   | $O(L)$   | $O(1)$   |
+     | Storage space for $A$, $B$      | $O(L^2)$ | $O(L)$   |
+
+
+** Quiver application: polishing /M. ruber/
+   Comparison of assembly to Sanger reference:
+
+   |-----------------------------------+---------+-------------|
+   | Celera assembler "make-consensus" | Q43.4   |    99.9954% |
+   |-----------------------------------+---------+-------------|
+   | Quiver                            | *Q54.5* | *99.99964%* |
+   |-----------------------------------+---------+-------------|
+
+** Quiver accuracy
+   \hspace*{0.2in}\includegraphics[width=4in]{img/quiver-accuracy-vs-coverage.png}
+
+   - With accuracy > Q50, we are now confronting pesky biological facts!
+      - Frequent mutations to our in-house /E. Coli/ strain
+      - Nonclonal samples
+   - We are also starting to find errors in Sanger-based references!
+
+
+# ** Quiver case study: Genomic regions associated with mental retardation
+# *** (ignored)  :B_ignoreheading:BMCOL:
+#     :PROPERTIES:
+#     :BEAMER_env: ignoreheading
+#     :BEAMER_col: 0.5
+#     :END:
+#    - Collaboration with Evan Eichler (HHMI, University of Washington)
+#    - BACs from VMRC53 library CH15 clones, thought to be close to HG19
+#      reference genome
+#    - $\sim ~30$ discordant bases between PacBio data and HG19 (Sanger) data
+#    - PacBio calls 100\% confirmed by PCR-Sanger
+
+# *** (ignored) :B_ignoreheading:BMCOL:
+#     :PROPERTIES:
+#     :BEAMER_env: ignoreheading
+#     :BEAMER_col: 0.5
+#     :END:
+#     \includegraphics[width=\textwidth]{img/eichler-variants.png}
+
+
+
+** Quiver extentions
+   - Reducing coverage requirements for high accuracy
+   - Diploid/polyploid/sample mixtures
+
+* Conclusions
+**
+   \sectionpage
+
+** Conclusions
+   \includegraphics[width=3in]{img/RS.pdf}
+   \includegraphics[width=2in]{img/smrtcell.jpeg}
+
+   The PacBio\R /RS/ has become a powerful platform for assembly and
+   highly accurate sequencing, and is getting better by the week!
+
+** Acknowledgements
+   - Jonas Korlach
+   - Pat Marks (Quiver co-author)
+   - Jason Chin
+   - Aaron Klammer
+   - Collaborators at DOE-JGI, Eichler lab

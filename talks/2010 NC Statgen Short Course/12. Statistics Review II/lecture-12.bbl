@@ -1,0 +1,24 @@
+\begin{thebibliography}{1}
+
+\bibitem{agresti2007introduction}
+A.~Agresti.
+\newblock {\em {An introduction to categorical data analysis}}.
+\newblock Wiley-Blackwell, 2007.
+
+\bibitem{pearson2008interpret}
+T.A. Pearson and T.A. Manolio.
+\newblock {How to interpret a genome-wide association study}.
+\newblock {\em JAMA}, 299(11):1335, 2008.
+
+\bibitem{balding2006tutorial}
+D.J. Balding.
+\newblock {A tutorial on statistical methods for population association
+  studies}.
+\newblock {\em Nature Reviews Genetics}, 7(10):781--791, 2006.
+
+\bibitem{wasserman2004all}
+L.~Wasserman.
+\newblock {\em {All of statistics: a concise course in statistical inference}}.
+\newblock Springer Verlag, 2004.
+
+\end{thebibliography}

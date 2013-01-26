@@ -1,0 +1,20 @@
+\begin{thebibliography}{1}
+
+\bibitem{slatkin2008linkage}
+M.~Slatkin.
+\newblock {Linkage disequilibrium---understanding the evolutionary past and
+  mapping the medical future}.
+\newblock {\em Nature Reviews Genetics}, 9(6):477--485, 2008.
+
+\bibitem{devlin1995comparison}
+B.~Devlin and N.~Risch.
+\newblock {A comparison of linkage disequilibrium measures for fine-scale
+  mapping}.
+\newblock {\em Genomics}, 29(2):311--322, 1995.
+
+\bibitem{barrett2005haploview}
+JC~Barrett, B.~Fry, J.~Maller, and MJ~Daly.
+\newblock {Haploview: analysis and visualization of LD and haplotype maps}.
+\newblock {\em Bioinformatics}, 21(2):263, 2005.
+
+\end{thebibliography}

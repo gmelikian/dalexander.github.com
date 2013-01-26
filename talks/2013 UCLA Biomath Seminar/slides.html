@@ -1,0 +1,1094 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Highly Accurate Consensus Sequence and Genome Assembly using PacBio\R  <i>RS</i> Sequence Data</title>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta name="title" content="Highly Accurate Consensus Sequence and Genome Assembly using PacBio\R  <i>RS</i> Sequence Data"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2013-01-12 17:54:02 PST"/>
+<meta name="author" content="David H. Alexander, Ph.D. \newline  Pacific Biosciences"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
+</head>
+<body>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">Highly Accurate Consensus Sequence and Genome Assembly using PacBio\R  <i>RS</i> Sequence Data</h1>
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Outline</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Outline</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<ul>
+<li>History of DNA sequencing
+</li>
+<li>PacBio SMRT\R sequencing in a nutshell
+</li>
+<li>A genome assembly primer
+</li>
+<li>HGAP assembly procedure
+</li>
+<li>High accuracy consensus: the Quiver algorithm
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> History of DNA sequencing</h2>
+<div class="outline-text-2" id="text-2">
+
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> </h3>
+<div class="outline-text-3" id="text-2-1">
+
+<p>   \sectionpage
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Generation 1: Sanger sequencing</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<p>   \includegraphics[width=4.5in]{img/capillary-sanger.pdf}
+</p>
+<ul>
+<li>Dideoxy chain termination
+</li>
+<li>Longish reads (\(\sim700\) bp). High accuracy. Low throughput
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> Generation 2: High-throughput short-read technologies</h3>
+<div class="outline-text-3" id="text-2-3">
+
+<ul>
+<li>Short-reads (\(\sim 100\) bp), paired-end
+<ul>
+<li>Read length limited by phase coherence of amplicon colonies
+</li>
+</ul>
+
+</li>
+<li>Mate-pair libraries give potential for long-range information
+</li>
+<li><b>Very</b> high throughput
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="section-number-3">2.4</span> Generation 2 example: Illumina</h3>
+<div class="outline-text-3" id="text-2-4">
+
+<p>   \begin{columns}[c]
+   \column{2.2in} \hspace{0.1in} \includegraphics[width=2in]{img/illumina-amplification.png}
+   \column{2.5in} \includegraphics[width=1.8in]{img/illumina-reaction.png}
+   \end{columns}
+
+</p><ul>
+<li>Bridge PCR method for clonal amplification
+</li>
+<li>Cyclic, reversible-terminator based chemistry
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-5" class="outline-3">
+<h3 id="sec-2-5"><span class="section-number-3">2.5</span> Generation 3: High-throughput long-read technologies</h3>
+<div class="outline-text-3" id="text-2-5">
+
+<p>   \includegraphics[width=3in]{img/RS.pdf}
+   \includegraphics[width=2in]{img/smrtcell.jpeg}
+</p>
+<p>
+   PacBio SMRT\R sequencing
+</p><ul>
+<li>Very long reads (C2 chemistry mean &gt; 3000bp; XL: &gt; 5000bp)
+</li>
+<li>High throughput
+</li>
+</ul>
+
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> PacBio SMRT\R Sequencing</h2>
+<div class="outline-text-2" id="text-3">
+
+
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> </h3>
+<div class="outline-text-3" id="text-3-1">
+
+<p>  \sectionpage
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> SMRT\R = "single molecule, real time"</h3>
+<div class="outline-text-3" id="text-3-2">
+
+<p>   \includegraphics[width=4.5in]{img/smrt-cartoon.pdf}
+</p><ul>
+<li>Polymerases immobilized in Zero-Mode Waveguides
+</li>
+<li>DNA sequencing reaction watched in real time using
+     fluorescent-labeled nucleotides
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> Long, and very long, reads: history</h3>
+<div class="outline-text-3" id="text-3-3">
+
+<p>   \includegraphics[width=4.2in]{img/readlength-timeline.png}
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-4" class="outline-3">
+<h3 id="sec-3-4"><span class="section-number-3">3.4</span> Long, and very long, reads: C2</h3>
+<div class="outline-text-3" id="text-3-4">
+
+<p>   \includegraphics[width=3.8in]{img/c2-readlengths.pdf}
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-5" class="outline-3">
+<h3 id="sec-3-5"><span class="section-number-3">3.5</span> From photon counts to base calls: <b>primary</b> analysis</h3>
+<div class="outline-text-3" id="text-3-5">
+
+<p>   \includegraphics[width=4.5in]{img/primary-reduction.pdf}
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-6" class="outline-3">
+<h3 id="sec-3-6"><span class="section-number-3">3.6</span> From bases to actionable information: <b>secondary</b> analysis</h3>
+<div class="outline-text-3" id="text-3-6">
+
+<p>   \vspace*{\bigskip}
+   \hspace*{2em}
+   \includegraphics[width=3.6in]{img/smrtview.png}
+</p>
+
+</div>
+
+<div id="outline-container-3-6-1" class="outline-4">
+<h4 id="sec-3-6-1"><span class="section-number-4">3.6.1</span> cols &nbsp;&nbsp;&nbsp;<span class="tag"><span class="B_columns">B_columns</span></span></h4>
+<div class="outline-text-4" id="text-3-6-1">
+
+<ul>
+<li id="sec-3-5-1-1">left &nbsp;&nbsp;&nbsp;<span class="tag"><span class="BMCOL">BMCOL</span>&nbsp;<span class="B_ignoreheading">B_ignoreheading</span></span><br/>
+<ul>
+<li>Variant calling
+</li>
+<li>Phasing
+</li>
+<li><i>De novo</i> genome assembly
+</li>
+</ul>
+
+</li>
+</ul>
+<ul>
+<li id="sec-3-5-1-2">right &nbsp;&nbsp;&nbsp;<span class="tag"><span class="BMCOL">BMCOL</span>&nbsp;<span class="B_ignoreheading">B_ignoreheading</span></span><br/>
+<ul>
+<li>Methylation / base modification detection
+</li>
+<li>Transcript analysis
+</li>
+</ul>
+
+
+
+</li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3-7" class="outline-3">
+<h3 id="sec-3-7"><span class="section-number-3">3.7</span> PacBio data: error model</h3>
+<div class="outline-text-3" id="text-3-7">
+
+<p>   \begin{figure}
+   \centering
+     \includegraphics[width=4.5in]{img/trace.png}
+   \end{figure}
+
+</p><ul>
+<li>Errors dominated by indels
+<ul>
+<li>Cognate extras (homopolymer expansion)
+</li>
+<li>Pulse merging (homopolymer contraction)
+</li>
+<li>Noncognate extras
+</li>
+<li><i>Essentially no substitutions</i>
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-8" class="outline-3">
+<h3 id="sec-3-8"><span class="section-number-3">3.8</span> PacBio data: data format</h3>
+<div class="outline-text-3" id="text-3-8">
+
+<p>   <code>bas.h5</code> file contains a lot more than just basecalls.  Basecaller
+   provides metrics indicating areas of uncertainty.  "Breadcrumbs"
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="right" /><col class="right" /><col class="right" /><col class="left" /><col class="right" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">Base</th><th scope="col" class="right">Insertion</th><th scope="col" class="right">Substitution</th><th scope="col" class="right">Deletion</th><th scope="col" class="left">Deletion</th><th scope="col" class="right">Merge</th></tr>
+<tr><th scope="col" class="left"></th><th scope="col" class="right">QV</th><th scope="col" class="right">QV</th><th scope="col" class="right">QV</th><th scope="col" class="left">Tag</th><th scope="col" class="right">QV</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">A</td><td class="right">8</td><td class="right">12</td><td class="right">16</td><td class="left">N</td><td class="right">14</td></tr>
+<tr><td class="left">T</td><td class="right">2</td><td class="right">12</td><td class="right">5</td><td class="left">T</td><td class="right">100</td></tr>
+<tr><td class="left">T</td><td class="right">11</td><td class="right">30</td><td class="right">4</td><td class="left">G</td><td class="right">25</td></tr>
+<tr><td class="left">G</td><td class="right">12</td><td class="right">30</td><td class="right">11</td><td class="left">A</td><td class="right">11</td></tr>
+<tr><td class="left">G</td><td class="right">3</td><td class="right">30</td><td class="right">16</td><td class="left">N</td><td class="right">27</td></tr>
+<tr><td class="left">C</td><td class="right">6</td><td class="right">30</td><td class="right">16</td><td class="left">N</td><td class="right">19</td></tr>
+<tr><td class="left">C</td><td class="right">3</td><td class="right">19</td><td class="right">3</td><td class="left">C</td><td class="right">21</td></tr>
+<tr><td class="left">G</td><td class="right">2</td><td class="right">21</td><td class="right">4</td><td class="left">G</td><td class="right">22</td></tr>
+</tbody>
+</table>
+
+
+<p>
+   $$QV = -10 \log_{10} p_{error}$$
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> A genome assembly primer</h2>
+<div class="outline-text-2" id="text-4">
+
+
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> </h3>
+<div class="outline-text-3" id="text-4-1">
+
+<p>   \sectionpage
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> Shotgun sequencing and assembly</h3>
+<div class="outline-text-3" id="text-4-2">
+
+<p>   \includegraphics[width=4.5in]{img/shotgun.pdf}
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> Shotgun sequencing and assembly</h3>
+<div class="outline-text-3" id="text-4-3">
+
+<p>   \includegraphics[width=4in]{img/overlap-graphs.pdf}
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-4" class="outline-3">
+<h3 id="sec-4-4"><span class="section-number-3">4.4</span> Lander-Waterman model (1988)</h3>
+<div class="outline-text-3" id="text-4-4">
+
+<p>   Idealization of genome assembly.  Letting \(L\) denote readlength,
+   \(G\) genome size, and \(C\) coverage, main results:
+</p>
+
+</div>
+
+<div id="outline-container-4-4-1" class="outline-4">
+<h4 id="sec-4-4-1"><span class="section-number-4">4.4.1</span> Expected number of contigs (ideal) &nbsp;&nbsp;&nbsp;<span class="tag"><span class="B_block">B_block</span></span></h4>
+<div class="outline-text-4" id="text-4-4-1">
+
+<p>    $$\mathrm{E}[\mathrm{NumContigs}]  = L^{-1}GC e^{-C}$$
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-4-2" class="outline-4">
+<h4 id="sec-4-4-2"><span class="section-number-4">4.4.2</span> Expected contig length (ideal) &nbsp;&nbsp;&nbsp;<span class="tag"><span class="B_block">B_block</span></span></h4>
+<div class="outline-text-4" id="text-4-4-2">
+
+<p>    $$\mathrm{E}[\mathrm{ContigLength}] = LC^{-1}(e^{C} - 1)$$
+</p>
+<p>
+    Predicts that long reads are better, but sufficient short read
+    coverage would be just as good.  <b>However&hellip;</b>
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4-5" class="outline-3">
+<h3 id="sec-4-5"><span class="section-number-3">4.5</span> Long repeats are everywhere</h3>
+<div class="outline-text-3" id="text-4-5">
+
+
+
+</div>
+
+<div id="outline-container-4-5-1" class="outline-4">
+<h4 id="sec-4-5-1"><span class="section-number-4">4.5.1</span> FOO &nbsp;&nbsp;&nbsp;<span class="tag"><span class="B_columns">B_columns</span></span></h4>
+<div class="outline-text-4" id="text-4-5-1">
+
+<ul>
+<li id="sec-4-4-1-1">Human mobile elements &nbsp;&nbsp;&nbsp;<span class="tag"><span class="BMCOL">BMCOL</span>&nbsp;<span class="B_block">B_block</span></span><br/>
+    \vspace{0.2in}
+    \includegraphics[width=2.3in]{img/witherspoon-mobile-elements.pdf}
+    \newline
+    \tiny [Credit: David Witherspoon]
+
+</li>
+</ul>
+<ul>
+<li id="sec-4-4-1-2"><i>E Coli</i> long repeats &nbsp;&nbsp;&nbsp;<span class="tag"><span class="BMCOL">BMCOL</span>&nbsp;<span class="B_block">B_block</span></span><br/>
+     \includegraphics[width=2in]{img/ecoli-repeats.pdf}
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-4-5-2" class="outline-4">
+<h4 id="sec-4-5-2"><span class="section-number-4">4.5.2</span> text (ignored) &nbsp;&nbsp;&nbsp;<span class="tag"><span class="B_ignoreheading">B_ignoreheading</span></span></h4>
+<div class="outline-text-4" id="text-4-5-2">
+
+<p>    Long repeats stymie short read assembly:
+</p><ul>
+<li>False edges introduced into overlap graph
+</li>
+<li><i>Misassembly</i>
+</li>
+<li>Workarounds&mdash;mate-pair, clone libraries&mdash;require more laborious sample prep
+</li>
+</ul>
+
+
+
+</div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> HGAP assembly procedure</h2>
+<div class="outline-text-2" id="text-5">
+
+
+
+</div>
+
+<div id="outline-container-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> </h3>
+<div class="outline-text-3" id="text-5-1">
+
+<p>   \sectionpage
+</p>
+
+</div>
+
+</div>
+
+<div id="outline-container-5-2" class="outline-3">
+<h3 id="sec-5-2"><span class="section-number-3">5.2</span> Hierarchical genome assembly procedure (HGAP)</h3>
+<div class="outline-text-3" id="text-5-2">
+
+<p>   \hspace*{-0.2in}
+   \includegraphics[width=4.75in]{img/hgap.pdf}
+   \hspace*{0.4in}
+</p>
+
+</div>
+
+</div>
+
+<div id="outline-container-5-3" class="outline-3">
+<h3 id="sec-5-3"><span class="section-number-3">5.3</span> HGAP application: <i>Meiothermus ruber</i> (JGI/DOE)</h3>
+<div class="outline-text-3" id="text-5-3">
+
+<p>   \hspace*{-0.2in}
+   \includegraphics[width=4.75in]{img/hgap-mruber1.pdf}
+   \hspace*{0.4in}
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-5-4" class="outline-3">
+<h3 id="sec-5-4"><span class="section-number-3">5.4</span> HGAP application: <i>Meiothermus ruber</i> (JGI/DOE)</h3>
+<div class="outline-text-3" id="text-5-4">
+
+<p>   \hspace*{-0.2in}
+   \includegraphics[width=4.75in]{img/hgap-mruber2.pdf}
+   \hspace*{0.4in}
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-5-5" class="outline-3">
+<h3 id="sec-5-5"><span class="section-number-3">5.5</span> HGAP application: <i>Meiothermus ruber</i> (JGI/DOE)</h3>
+<div class="outline-text-3" id="text-5-5">
+
+<p>   \hspace*{-0.2in}
+   \includegraphics[width=4.75in]{img/hgap-mruber3.pdf}
+</p>
+
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> High accuracy consensus: the Quiver algorithm</h2>
+<div class="outline-text-2" id="text-6">
+
+
+
+</div>
+
+<div id="outline-container-6-1" class="outline-3">
+<h3 id="sec-6-1"><span class="section-number-3">6.1</span> </h3>
+<div class="outline-text-3" id="text-6-1">
+
+<p>  \sectionpage
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-6-2" class="outline-3">
+<h3 id="sec-6-2"><span class="section-number-3">6.2</span> The consensus problem</h3>
+<div class="outline-text-3" id="text-6-2">
+
+<ul>
+<li><i>Given</i>: A sequence of reads \(\mathbf{R} = \{R_1, R_2, \ldots
+    R_{K}\}\) (encompassing basecalls <i>and</i> pulse metric features)
+</li>
+<li><i>Desired</i>: A consensus sequence \(\widehat{T}\) that is, in some sense,
+    a "best" estimate of the underlying true template sequence \(T\) that
+    was present in the ZMW.
+</li>
+</ul>
+
+
+
+</div>
+
+<div id="outline-container-6-2-1" class="outline-4">
+<h4 id="sec-6-2-1"><span class="section-number-4">6.2.1</span> Applications: &nbsp;&nbsp;&nbsp;<span class="tag"><span class="B_block">B_block</span></span></h4>
+<div class="outline-text-4" id="text-6-2-1">
+
+<p>    Variant calling, finishing assemblies, circular
+    consensus sequencing&hellip;
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-6-3" class="outline-3">
+<h3 id="sec-6-3"><span class="section-number-3">6.3</span> Example</h3>
+<div class="outline-text-3" id="text-6-3">
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">Template</th><th scope="col" class="left"><code>GATTACA</code></th></tr>
+</thead>
+<tbody>
+<tr><td class="left">Read 1</td><td class="left"><code>GATTCA</code></td></tr>
+<tr><td class="left">Read 2</td><td class="left"><code>GATTTACA</code></td></tr>
+<tr><td class="left">Read 3</td><td class="left"><code>GATACA</code></td></tr>
+</tbody>
+</table>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6-4" class="outline-3">
+<h3 id="sec-6-4"><span class="section-number-3">6.4</span> Multiple-alignment consensus approach</h3>
+<div class="outline-text-3" id="text-6-4">
+
+<p>   Do an MSA and let each column vote.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">Read 1</th><th scope="col" class="left">\verb\(GA-TT-CA\)</th></tr>
+<tr><th scope="col" class="left">Read 2</th><th scope="col" class="left">\verb\(GATTTACA\)</th></tr>
+<tr><th scope="col" class="left">Read 3</th><th scope="col" class="left">\verb\(GA--TACA\)</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">Plurality</td><td class="left">\verb\(GA-TTACA\)</td></tr>
+</tbody>
+</table>
+
+
+<p>
+   Problems:
+</p><ul>
+<li>No notion of template vs observations&ndash;no clean way to represent our error model.
+</li>
+<li>No way to take advantage of QV information
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6-5" class="outline-3">
+<h3 id="sec-6-5"><span class="section-number-3">6.5</span> Quiver: a model-based approach</h3>
+<div class="outline-text-3" id="text-6-5">
+
+<ul>
+<li>Encode our sequencing error model as \(\Pr(\mathbf{R} \mid T)\)
+</li>
+<li>Quiver uses a greedy algorithm to maximize the likelihood
+     \(\Pr(\mathbf{R} \mid T)\) in the unknown template \(T\).
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6-6" class="outline-3">
+<h3 id="sec-6-6"><span class="section-number-3">6.6</span> Quiver algorithm overview</h3>
+<div class="outline-text-3" id="text-6-6">
+
+<p>   \(\mathsf{QuiverConsensus}\) for reference window \(W\): (<i>Rough sketch</i>)
+</p><ul>
+<li>Use reference alignment to identify reads \(\mathbf{R}=\{R_1, R_2, \ldots R_K\}\)
+     corresponding to \(W\)
+</li>
+<li><i>Throw away reference&mdash;not used in computing consensus</i>
+</li>
+<li>\(\widehat{T} \leftarrow \mathsf{PoaConsensus}(\mathbf{R})\)
+</li>
+<li>Repeat until convergence:
+     $$\widehat{T} \leftarrow \hat{T} +
+     \big\{\text{single base mutations } \mu \, \mid
+     \Pr(\mathbf{R} \mid \widehat{T} + \mu) > \Pr(\mathbf{R} \mid \widehat{T}) \big\}$$
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6-7" class="outline-3">
+<h3 id="sec-6-7"><span class="section-number-3">6.7</span> How to compute \(\Pr(\mathbf{R} \mid T)\)?</h3>
+<div class="outline-text-3" id="text-6-7">
+
+
+<ol>
+<li>Reads are assumed independent, so
+      $$\Pr(\mathbf{R} \mid T) = \prod_{k=1}^{K}\Pr(R_k \mid T)$$
+
+</li>
+<li>For PacBio, indels are the rule, so consider the
+      possible \emph{alignments}&mdash;the ways \(T\) can be construed to
+      have generated \(R_k\):
+
+<p>
+      $$\Pr(R_k \mid T) = \sum_\mathcal{A} \Pr(R_k, \mathcal{A} \mid T) $$
+</p>
+<p>
+      <i>Computed efficiently using a standard Sum-Product dynamic programming approach.</i>
+</p></li>
+</ol>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6-8" class="outline-3">
+<h3 id="sec-6-8"><span class="section-number-3">6.8</span> Sketch of dynamic programming</h3>
+<div class="outline-text-3" id="text-6-8">
+
+<ul>
+<li>Sum-Product definition:
+     \begin{align*}
+     A_{ij} \doteq&
+     \text{ marginal prob. of an alignment of $R$[0:i+1] to $T$[0:j+1]} \\
+     B_{ij} \doteq&
+     \text{ marginal prob. of an alignment of $R$[i:I] to $T$[j:J]}
+     \end{align*}
+
+</li>
+<li>Sum-Product recursion:
+   \begin{align*}
+   A_{ij} &= \sum_{m: (i',j') \to (i, j)}   (A_{i'j'} \times \mathrm{moveScore}(m)) \\
+   B_{ij} &= \sum_{m: (i, j)  \to (i', j')} (\mathrm{moveScore}(m) \times B_{i'j'})
+   \end{align*}
+
+</li>
+<li>For Viterbi approximation, replace <i>marginal</i> by <i>maximum</i>, replace <i>sum</i>
+   by <i>max</i>.
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6-9" class="outline-3">
+<h3 id="sec-6-9"><span class="section-number-3">6.9</span> Alignment moves</h3>
+<div class="outline-text-3" id="text-6-9">
+
+<p>   \begin{figure}
+   \centering
+   \includegraphics[width=2.5in]{img/moves}
+   \end{figure}
+
+</p><ul>
+<li>Additional "merge" move helps better account for pulse merging
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6-10" class="outline-3">
+<h3 id="sec-6-10"><span class="section-number-3">6.10</span> Alignment move scores</h3>
+<div class="outline-text-3" id="text-6-10">
+
+<p>   \(moveScore\) is transition probability, determined by the observed
+   pulse metrics.  Example:
+</p>
+<p>
+   $$\mathrm{moveScore}(\mathsf{Insertion: (i, j) \to (i+1, j)}) = 10^{-0.1 \cdot\mathsf{InsertionQV[i]}}$$
+</p>
+
+<p>
+   where
+   \begin{align*}
+   \hat{p}_{insertion}[i]     &= \mathrm{UnPhred}(\mathsf{InsertionQV}[i]) \\
+   \hat{p}_{deletion}[i]      &= \hat{p}_{merge} + \hat_{p}_{missed}
+   \hat{p}_{incorporation}[i] &= p_ \\
+   \mathrm{UnPhred}(q) & = 10^{-q/10}  \\
+   \end{align*}
+
+   Our dynamic programming model can be formalized as <i>pair HMM</i>
+   (actually a <i>pair CRF</i>).
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-6-11" class="outline-3">
+<h3 id="sec-6-11"><span class="section-number-3">6.11</span> Efficiently computing \(\Pr(R_k \mid T + \mu)\)</h3>
+<div class="outline-text-3" id="text-6-11">
+
+<ul>
+<li>Need to compute score of mutation \(\mu\) quickly as this is the
+     <i>rate-limiting operation</i> in computing the consensus.
+</li>
+<li>Do not refill entire \(A\), \(B\) matrices&ndash;we just recalculate two
+     columns of \(A\) and join with one column of \(B\).
+</li>
+<li>Exploit forward-backward identity
+     \begin{align*}
+     \Pr(R_k \mid T)   =& A_{IJ} = B_{00} \\
+                       =& \sum_{m: (i',j') \to (i, j)} A_{i'j'} \times B_{ij},
+                       \text{ for \bf{any} $j$}
+     \end{align*}
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6-12" class="outline-3">
+<h3 id="sec-6-12"><span class="section-number-3">6.12</span> Banding for memory and CPU efficiency</h3>
+<div class="outline-text-3" id="text-6-12">
+
+<p>   \begin{figure}
+   \centering
+   \includegraphics[width=3in]{img/sparsity}
+   \end{figure}
+
+</p><ul>
+<li>Optimization 1: <i>banded dynamic programming</i>: only compute a narrow band of
+     high-scoring rows within each column.
+</li>
+<li>Optimization 2: Only <i>store</i> the bands.
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left"></th><th scope="col" class="left">Naive</th><th scope="col" class="left">Banded</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">Initial computation of \(A\), \(B\)</td><td class="left">\(O(L^3)\)</td><td class="left">\(O(L^2)\)</td></tr>
+<tr><td class="left">Computation of mutation score</td><td class="left">\(O(L)\)</td><td class="left">\(O(1)\)</td></tr>
+<tr><td class="left">Storage space for \(A\), \(B\)</td><td class="left">\(O(L^2)\)</td><td class="left">\(O(L)\)</td></tr>
+</tbody>
+</table>
+
+</li>
+</ul>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6-13" class="outline-3">
+<h3 id="sec-6-13"><span class="section-number-3">6.13</span> Quiver application: polishing <i>M. ruber</i></h3>
+<div class="outline-text-3" id="text-6-13">
+
+<p>   Comparison of assembly to Sanger reference:
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">Celera assembler "make-consensus"</th><th scope="col" class="left">Q43.4</th><th scope="col" class="left">99.9954%</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">Quiver</td><td class="left"><b>Q54.5</b></td><td class="left"><b>99.99964%</b></td></tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6-14" class="outline-3">
+<h3 id="sec-6-14"><span class="section-number-3">6.14</span> Quiver accuracy</h3>
+<div class="outline-text-3" id="text-6-14">
+
+<p>   \hspace*{0.2in}\includegraphics[width=4in]{img/quiver-accuracy-vs-coverage.png}
+</p>
+<ul>
+<li>With accuracy &gt; Q50, we are now confronting pesky biological facts!
+<ul>
+<li>Frequent mutations to our in-house <i>E. Coli</i> strain
+</li>
+<li>Nonclonal samples
+</li>
+</ul>
+
+</li>
+<li>We are also starting to find errors in Sanger-based references!
+</li>
+</ul>
+
+
+
+
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6-15" class="outline-3">
+<h3 id="sec-6-15"><span class="section-number-3">6.15</span> Quiver extentions</h3>
+<div class="outline-text-3" id="text-6-15">
+
+<ul>
+<li>Reducing coverage requirements for high accuracy
+</li>
+<li>Diploid/polyploid/sample mixtures
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> Conclusions</h2>
+<div class="outline-text-2" id="text-7">
+
+
+</div>
+
+<div id="outline-container-7-1" class="outline-3">
+<h3 id="sec-7-1"><span class="section-number-3">7.1</span> </h3>
+<div class="outline-text-3" id="text-7-1">
+
+<p>   \sectionpage
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-7-2" class="outline-3">
+<h3 id="sec-7-2"><span class="section-number-3">7.2</span> Conclusions</h3>
+<div class="outline-text-3" id="text-7-2">
+
+<p>   \includegraphics[width=3in]{img/RS.pdf}
+   \includegraphics[width=2in]{img/smrtcell.jpeg}
+</p>
+<p>
+   The PacBio\R <i>RS</i> has become a powerful platform for assembly and
+   highly accurate sequencing, and is getting better by the week!
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-7-3" class="outline-3">
+<h3 id="sec-7-3"><span class="section-number-3">7.3</span> Acknowledgements</h3>
+<div class="outline-text-3" id="text-7-3">
+
+<ul>
+<li>Jonas Korlach
+</li>
+<li>Pat Marks (Quiver co-author)
+</li>
+<li>Jason Chin
+</li>
+<li>Aaron Klammer
+</li>
+<li>Collaborators at DOE-JGI, Eichler lab
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2013-01-12 17:54:02 PST</p>
+<p class="author">Author: David H. Alexander, Ph.D. \newline  Pacific Biosciences</p>
+<p class="creator">Org version 7.8.11 with Emacs version 24</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+\frametitle {Using \admixture\ (2)}
+  \admixture's output of estimated ancestry fractions and allele frequencies is put in files {\sf myStudy.2.Q} and {\sf myStudy.3.F}
+
+{\sf myStudy.2.Q}:
+\begin{center}
+\begin{minipage}{2in}
+\lstset{framexleftmargin=0mm, frame=shadowbox, rulesepcolor=\color{blue}, numbers=left}
+  \begin{lstlisting}
+    0.9999 0.0001
+    0.8000 0.2000
+    0.1000 0.9000
+    0.2000 0.8000
+    ...
+  \end{lstlisting}
+\end{minipage}
+\end{center}
+  The $i^{th}$ line is the ancestry vector for the $i^{th}$ individual.  For example, individual 2 is estimated at having 80\% of her genes from population 1, 20\% from population 2.
+
+  % point out that ADMIXTURE doesn't know which pop is which
