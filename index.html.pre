@@ -18,7 +18,7 @@ under the supervision
 of <a href="http://research.mednet.ucla.edu/institution/personnel?personnel_id=45702">
 Kenneth Lange</a>.  I currently work
 for <a href="http://www.pacificbiosciences.com">Pacific
-Biosciences</a>, where I am an algorithms engineer.  My continuing
+Biosciences</a>, where I am a senior algorithms engineer.  My continuing
 research interests are in statistical and population genetics,
 computational and mathematical statistics, and high-performance
 scientific computing.  My background is in computer science and
@@ -34,13 +34,21 @@ engineering.
 include(bib2xhtml-2.35/cv.html)
 
 <h2>Talks:</h2>
+
+UCLA Biomath Symposium, December 2013:
+<ul>
+<li><a href="https://github.com/dalexander/dalexander.github.com/raw/master/talks/2013%20UCLA%20Biomath%20Seminar/slides.pdf">Highly Accurate Consensus Sequence and Genome Assembly using PacBio&reg; RS Sequence Data</a>
+</ul>
+
 UNC Statistical Genetics Short Course 2010:
 <ul>
-<li><a href="http://bitbucket.org/dalexander/talks/src/9b0979edffe4/2010%20NC%20Statgen%20Short%20Course/12.%20Statistics%20Review%20II/lecture-12.pdf">Statistics review</a>
-<li><a href="http://bitbucket.org/dalexander/talks/src/9b0979edffe4/2010%20NC%20Statgen%20Short%20Course/15.%20Linkage%20Equilibrium%20and%20Disequilibrium/lecture-15.pdf">Linkage disequilibrium</a>
-<li><a href="http://bitbucket.org/dalexander/talks/src/9b0979edffe4/2010%20NC%20Statgen%20Short%20Course/17.%20Genetic%20Studies%20in%20Structured%20Populations/lecture-17.pdf">Genetic studies in structured populations</a>
+
+<li><a href="https://github.com/dalexander/dalexander.github.com/raw/master/talks/2010%20NC%20Statgen%20Short%20Course/12.%20Statistics%20Review%20II/lecture-12.pdf">Statistics review</a>
+
+<li><a href="https://github.com/dalexander/dalexander.github.com/raw/master/talks/2010%20NC%20Statgen%20Short%20Course/15.%20Linkage%20Equilibrium%20and%20Disequilibrium/lecture-15.pdf">Linkage disequilibrium</a>
+<li><a href="https://github.com/dalexander/dalexander.github.com/raw/master/talks/2010%20NC%20Statgen%20Short%20Course/17.%20Genetic%20Studies%20in%20Structured%20Populations/lecture-17.pdf">Genetic studies in structured populations</a>
 </ul>
-Source for all talks <a href="http://bitbucket.org/dalexander/talks/src">available here</a>.
+Source for all talks <a href="https://github.com/dalexander/dalexander.github.com/tree/master/talks">available here</a>.
 
 <p>
 <h2 style="display: inline;">Vita:</h2>
